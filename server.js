@@ -3,15 +3,32 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-
+const books = require('./models/books');
+const { default: mongoose } = require('mongoose');
 const app = express();
+
+const MONGODB_URL = process.env.MONGODB_URL;
+
+mongoose.connect(MONGODB_URL);
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 
-app.get('/test', (request, response) => {
+app.get('/books', async (request, response) => {
 
-  response.send('test request received')
+let title = request.query.title;
+console.log(title);
+  let result = [];
+  if (title){
+    result = await books.find({
+      title: title
+    })
+  }else {
+
+    result = await books.find();
+  }
+
+  response.send(result);
 
 })
 
