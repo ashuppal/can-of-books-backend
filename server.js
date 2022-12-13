@@ -5,19 +5,22 @@ const express = require('express');
 const cors = require('cors');
 const books = require('./models/books');
 const { default: mongoose } = require('mongoose');
+const { response } = require('express');
 const app = express();
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
 mongoose.connect(MONGODB_URL);
 app.use(cors());
+app.use(express.json());
+
 
 const PORT = process.env.PORT || 3001;
 
 app.get('/books', async (request, response) => {
 
 let title = request.query.title;
-console.log(title);
+
   let result = [];
   if (title){
     result = await books.find({
@@ -31,5 +34,24 @@ console.log(title);
   response.send(result);
 
 })
+
+app.post('/books', async(request, response)=>{
+  let newBook = await books.create(request.body);
+  response.send(newBook);
+})
+
+app.delete('/books/:id', async(request, response)=>{
+
+  let id = request.params.id;
+
+  let deletedBook = await books.findByIdAndDelete(id);
+
+  response.send(deletedBook);
+})
+
+app.use;
+app.use('*', (request, response) => {
+  response.status(500).send('Invalid Request, page not found.');
+});
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
