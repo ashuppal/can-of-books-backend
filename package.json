@@ -23,8 +23,5 @@
   "bugs": {
     "url": "https://github.com/ashuppal/can-of-books-backend/issues"
   },
-  "homepage": "https://github.com/ashuppal/can-of-books-backend#readme",
-  "devDependencies": {
-    "nodemon": "^2.0.20"
-  }
+  "homepage": "https://github.com/ashuppal/can-of-books-backend#readme"
 }
