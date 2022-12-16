@@ -5,23 +5,30 @@ const express = require('express');
 const cors = require('cors');
 const books = require('./models/books');
 const mongoose = require('mongoose');
+const authorize = require('./auth.authorize');
+
 // const { response } = require('express')
 const app = express();
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
 mongoose.connect(MONGODB_URL);
+
 app.use(cors());
+app.use(authorize);
+
 app.use(express.json());
+
 
 const PORT = process.env.PORT || 3001;
 
 app.get('/books', async (request, response) => {
   console.log('this is a request', request);
   try {
-    let title = request.query.title;
 
+    let title = request.query.title;
     let result = [];
+
     if (title) {
       result = await books.find({
         title: title
@@ -57,7 +64,7 @@ app.delete('/books/:id', async (request, response) => {
 app.put('/books/:id', async (request, response) => {
 
   let id = request.params.id;
-  // find a cat in the database, and update it's values
+
   let updatedBook = await books.findOneAndUpdate({ _id: id}, request.body);
   console.log(updatedBook);
   response.send(updatedBook);
